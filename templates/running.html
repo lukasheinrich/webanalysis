@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+<script type="text/javascript" charset="utf-8">
+    $( document ).ready(function() {
+      $('#log').empty()
+    });
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.on('connect', function() {
+        socket.emit('handshake', {data: 'I\'m connected!'});
+        $("#starter").click(function(event){
+          console.log("hello")
+          socket.emit('runanalysis')
+        })
+    });
+
+    socket.on('respond', function (socket) {
+      $("#log").append(socket)
+      $("#log").scrollTop($("#log").prop("scrollHeight"));
+    })
+</script>
+
+<style type="text/css" media="screen">
+body{
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", 
+    Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+h1{
+  width:800px;
+  margin:auto;
+}
+#logcontainer{
+  width:800px;
+  margin:auto;
+}
+.logwindow{
+  background:black;
+  color:#cccccc;
+  overflow-y:scroll;
+  overflow-x:hidden;
+  height:600px;
+}
+</style>
+
+<html>
+  <head>
+  </head>
+  <body>
+      <button id="starter">start</button>
+
+      <h1>running the analysis.... this is the log:</h1>      
+      <div id="logcontainer">
+      <pre class="logwindow" id="log">
+running the analysis.... this is the log:
+
+?1034hRunning MG5 in debug mode
+************************************************************
+*                                                          *
+*           W E L C O M E  to  M A D G R A P H  5          *
+*                                                          *
+*                                                          *
+*                 *                       *                *
+*                   *        * *        *                  *
+*                     * * * * 5 * * * *                    *
+*                   *        * *        *                  *
+*                 *                       *                *
+*                                                          *
+*         VERSION 1.5.10                2013-XX-XX         *
+*                                                          *
+*    The MadGraph Development Team - Please visit us at    *
+*    https://server06.fynu.ucl.ac.be/projects/madgraph     *
+*                                                          *
+*               Type 'help' for in-line help.              *
+*           Type 'tutorial' to learn how MG5 works         *
+*                                                          *
+************************************************************
+load MG5 configuration from ../../../heptools/madgraph-1.5.10/input/mg5_configuration.txt 
+Using default text editor "vi". Set another one in ./input/mg5_configuration.txt
+import /Users/lukas/Code/scratch/runner/mg5.cmd
+The import format was not given, so we guess it as command
+import uploads/proc_card.dat
+The import format was not given, so we guess it as command
+#************************************************************
+#*                        MadGraph 5                        *
+#*                                                          *
+#*                *                       *                 *
+#*                  *        * *        *                   *
+#*                    * * * * 5 * * * *                     *
+#*                  *        * *        *                   *
+#*                *                       *                 *
+#*                                                          *
+#*                                                          *
+#*         VERSION 1.5.10                2013-05-16         *
+#*                                                          *
+#*    The MadGraph Development Team - Please visit us at    *
+#*    https://server06.fynu.ucl.ac.be/projects/madgraph     *
+#*                                                          *
+#************************************************************
+#*                                                          *
+#*               Command File for MadGraph 5                *
+#*                                                          *
+#*     run as ./bin/mg5  filename                           *
+#*                                                          *
+#************************************************************
+import model_v4 mssm
+INFO: load particles 
+INFO: load interactions 
+INFO: Change particles name to pass to MG5 convention 
+Defined multiparticle p = g u c d s u~ c~ d~ s~
+Defined multiparticle j = g u c d s u~ c~ d~ s~
+Defined multiparticle l+ = e+ mu+
+Defined multiparticle l- = e- mu-
+Defined multiparticle vl = ve vm vt
+Defined multiparticle vl~ = ve~ vm~ vt~
+Defined multiparticle all = g d u s c d~ u~ s~ c~ a e- mu- ve vm vt e+ mu+ ve~ vm~ vt~ go dl dr ul ur sl sr cl cr b1 b2 t1 t2 dl~ dr~ ul~ ur~ sl~ sr~ cl~ cr~ b1~ b2~ t1~ t2~ b t b~ t~ el- er- mul- mur- ta1- ta2- sve svm svt z w+ h1 h2 h3 h+ el+ er+ mul+ mur+ ta1+ ta2+ sve~ svm~ svt~ w- h- ta- n1 n2 n3 n4 x1+ x2+ ta+ x1- x2-
+generate p p > t1 t1~ @1
+INFO: Checking for minimal orders which gives processes. 
+INFO: Please specify coupling orders to bypass this step. 
+INFO: Trying coupling order WEIGHTED=2 
+INFO: Trying process: g g > t1 t1~ WEIGHTED=2 @1  
+INFO: Process has 4 diagrams 
+INFO: Trying process: u u > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: u c > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: u d > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: u s > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: u u~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Process has 1 diagrams 
+INFO: Trying process: u c~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: u d~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: u s~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: c c > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: c d > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: c s > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: c u~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: c c~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Process has 1 diagrams 
+INFO: Trying process: c d~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: c s~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: d d > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: d s > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: d u~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: d c~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: d d~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Process has 1 diagrams 
+INFO: Trying process: d s~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: s s > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: s u~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: s c~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: s d~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: s s~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Process has 1 diagrams 
+INFO: Process u~ u > t1 t1~ added to mirror process u u~ > t1 t1~ 
+INFO: Trying process: u~ u~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: u~ c~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: u~ d~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: u~ s~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Process c~ c > t1 t1~ added to mirror process c c~ > t1 t1~ 
+INFO: Trying process: c~ c~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: c~ d~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: c~ s~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Process d~ d > t1 t1~ added to mirror process d d~ > t1 t1~ 
+INFO: Trying process: d~ d~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Trying process: d~ s~ > t1 t1~ WEIGHTED=2 @1  
+INFO: Process s~ s > t1 t1~ added to mirror process s s~ > t1 t1~ 
+INFO: Trying process: s~ s~ > t1 t1~ WEIGHTED=2 @1  
+5 processes with 8 diagrams generated in 3.425 s
+Total: 5 processes with 8 diagrams
+output madgraphrun
+INFO: directory /Users/lukas/Code/scratch/runner/madgraphrun already exists.
+If you continue this directory will be deleted and replaced.
+Do you want to continue? [y, n]
+The answer to the previous question is not set in your input file
+Use y value
+INFO: initialize a new directory: madgraphrun 
+INFO: remove old information in madgraphrun 
+INFO: Organizing processes into subprocess groups 
+INFO: Generating Helas calls for process: g g > t1 t1~ WEIGHTED=2 @1 
+INFO: Processing color information for process: g g > t1 t1~ WEIGHTED=2 @1 
+INFO: Generating Helas calls for process: u u~ > t1 t1~ WEIGHTED=2 @1 
+INFO: Processing color information for process: u u~ > t1 t1~ WEIGHTED=2 @1 
+INFO: Combined process c c~ > t1 t1~ WEIGHTED=2 @1 with process u u~ > t1 t1~ WEIGHTED=2 @1 
+INFO: Combined process d d~ > t1 t1~ WEIGHTED=2 @1 with process u u~ > t1 t1~ WEIGHTED=2 @1 
+INFO: Combined process s s~ > t1 t1~ WEIGHTED=2 @1 with process u u~ > t1 t1~ WEIGHTED=2 @1 
+INFO: Creating files in directory P1_gg_t1t1x 
+INFO: Generating Feynman diagrams for Process: g g > t1 t1~ WEIGHTED=2 @1 
+INFO: Finding symmetric diagrams for subprocess group gg_t1t1x 
+INFO: Creating files in directory P1_qq_t1t1x 
+INFO: Generating Feynman diagrams for Process: u u~ > t1 t1~ WEIGHTED=2 @1 
+INFO: Finding symmetric diagrams for subprocess group qq_t1t1x 
+History written to /Users/lukas/Code/scratch/runner/madgraphrun/Cards/proc_card_mg5.dat
+Generated helas calls for 2 subprocesses (5 diagrams) in 0.136 s
+Wrote files for 18 helas calls in 0.515 s
+Copy mssm_v4 model files to directory /Users/lukas/Code/scratch/runner/madgraphrun
+save configuration file to /Users/lukas/Code/scratch/runner/madgraphrun/Cards/me5_configuration.txt
+INFO: Use Fortran compiler gfortran 
+INFO: Generate jpeg diagrams 
+INFO: Generate web pages 
+Output to directory /Users/lukas/Code/scratch/runner/madgraphrun done.
+Type "launch" to generate events from this process, or see
+/Users/lukas/Code/scratch/runner/madgraphrun/README
+Run "open index.html" to see more information about this process.
+set automatic_html_opening False
+This option will be the default in any output that you are going to create in this session.
+In order to keep this changes permanent please run 'save options'
+launch -n output
+************************************************************
+*                                                          *
+*           W E L C O M E  to  M A D G R A P H  5          *
+*                      M A D E V E N T                     *
+*                                                          *
+*                 *                       *                *
+*                   *        * *        *                  *
+*                     * * * * 5 * * * *                    *
+*                   *        * *        *                  *
+*                 *                       *                *
+*                                                          *
+*         VERSION 1.5.10                2013-XX-XX         *
+*                                                          *
+*    The MadGraph Development Team - Please visit us at    *
+*    https://server06.fynu.ucl.ac.be/projects/madgraph     *
+*                                                          *
+*               Type 'help' for in-line help.              *
+*                                                          *
+************************************************************
+load configuration from /Users/lukas/Code/scratch/runner/madgraphrun/Cards/me5_configuration.txt 
+load configuration from /Users/lukas/heptools/madgraph-1.5.10/input/mg5_configuration.txt 
+load configuration from /Users/lukas/Code/scratch/runner/madgraphrun/Cards/me5_configuration.txt 
+Using default text editor "vi". Set another one in ./input/mg5_configuration.txt
+generate_events output
+Will run in mode parton
+copy uploads/param_card.dat as param_card.dat
+set nevents 100
+modify parameter nevents of the run_card.dat to 100
+Generating 100 events with run name output
+survey  output 
+compile directory
+run_card missed argument xmtcentral. Takes default: 0.0
+run_card missed argument d. Takes default: 1.0
+run_card missed argument gridrun. Takes default: False
+run_card missed argument fixed_couplings. Takes default: True
+run_card missed argument lhaid. Takes default: 10042
+write compile file for card: /Users/lukas/Code/scratch/runner/madgraphrun/Source/MODEL/MG5_param.dat
+      </pre>
+    </div>
+  </body>
+</html>
