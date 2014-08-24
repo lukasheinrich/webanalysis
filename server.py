@@ -33,32 +33,58 @@ def killer():
   if p is not None: 
     p.kill()
     print 'killed'
-  
-def printer(req,p):
+
+def printer(p,req):
   with app.test_request_context():
-    while True:
-      from flask import request
-      request = req
-      s =  p.stdout.readline()
-      if not s: break
+    while p.poll() is None:
       import time
-      time.sleep(0.01)
       import re
+      s = p.stdout.readline()
+      time.sleep(0.005)
       strip_ansi =  re.sub(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?', '', s)
-      socketio.emit('respond',strip_ansi) 
+      socketio.emit('respond',strip_ansi)
+    (stdout,_) = p.communicate()
+    socketio.emit('respond',stdout)      
+    print "returning printer"
     return
 
+def workflow(req):
+  with app.test_request_context():
+    request = req
+    socketio.emit('update-stage','madgraph')
+    import subprocess
+    import threading
+    p = subprocess.Popen(['/Users/lukas/heptools/madgraph-1.5.10/bin/mg5','-f','mg5.cmd'],
+                        stdout = subprocess.PIPE,
+                        stderr = subprocess.PIPE,bufsize=0)
+                        
+    printer(p,request)
+    socketio.emit('update-stage','pythia')
+    subprocess.call('''gunzip -c ./madgraphrun/Events/output/events.lhe.gz > ./madgraphrun/Events/output/events.lhe''',shell=True)
+    p = subprocess.Popen('''PYTHIA8DATA=`pythia8-config --xmldoc` ./pythiarun/pythiarun pythiasteering.cmnd pythiarun/output.hepmc''',
+                  shell=True,
+                  stdout = subprocess.PIPE,
+                  stderr = subprocess.PIPE)
+    printer(p,request)
+    socketio.emit('update-stage','rivet')
+    # p = subprocess.Popen('''PYTHIA8DATA=`pythia8-config --xmldoc` ./pythiarun/pythiarun pythiasteering.cmnd pythiarun/output.hepmc''',
+    #               shell=True,
+    #               stdout = subprocess.PIPE,
+    #               stderr = subprocess.PIPE)
+    # t = threading.Thread(target=printer, args=(request,))
+    # t.start()
+    # p.communicate()
+    # t.join()
+
+                        
 @socketio.on('runanalysis')
 def handle_my_custom_event():
   import subprocess
   print 'ok.. now run the analysis....'
-  global p 
-  p = subprocess.Popen(['/Users/lukas/heptools/madgraph-1.5.10/bin/mg5','-f','mg5.cmd'],
-                      stdout = subprocess.PIPE,
-                      stderr = subprocess.PIPE)
   import threading
-  t = threading.Thread(target=printer, args=(request,p))
-  t.start()
+  from multiprocessing import Process
+  wfthread = threading.Thread(target=workflow,args=(request,))
+  wfthread.start()
   print "emit some stuff here"
   return
   

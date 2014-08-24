@@ -34,6 +34,10 @@
       $("#log").scrollTop($("#log").prop("scrollHeight"));
     })
     
+    socket.on('update-stage', function (socket) {
+      console.log(socket)
+      $("#stage").html(socket)
+    })
 
 </script>
 
@@ -47,7 +51,7 @@ h1{
   margin:auto;
 }
 #logcontainer{
-  width:800px;
+  width:1000px;
   margin:auto;
 }
 .logwindow{
@@ -68,6 +72,7 @@ h1{
 
       <h1>running the analysis.... this is the log:</h1>      
       <div id="logcontainer">
+      <h2>stage: <span id="stage"></span></h2>
       <pre class="logwindow" id="log">
 running the analysis.... this is the log:
 
