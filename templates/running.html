@@ -2,6 +2,17 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 <script type="text/javascript" charset="utf-8">
+
+    $( window ).unload(function() {
+      socket.emit('killer')
+    });
+
+    window.onbeforeunload = confirmExit;
+    function confirmExit()
+    {
+      return "kill process?";
+    }
+
     $( document ).ready(function() {
       $('#log').empty()
     });
@@ -9,15 +20,21 @@
     socket.on('connect', function() {
         socket.emit('handshake', {data: 'I\'m connected!'});
         $("#starter").click(function(event){
-          console.log("hello")
+          $('#log').empty()
+          $('#log').height(0)
           socket.emit('runanalysis')
         })
     });
 
     socket.on('respond', function (socket) {
       $("#log").append(socket)
+      if($("#log").height()<600){
+        $("#log").height($("#log").height()+parseInt($("#log").css("font-size").replace("px",""))*1)
+      }
       $("#log").scrollTop($("#log").prop("scrollHeight"));
     })
+    
+
 </script>
 
 <style type="text/css" media="screen">
@@ -38,7 +55,8 @@ h1{
   color:#cccccc;
   overflow-y:scroll;
   overflow-x:hidden;
-  height:600px;
+  height:0px;
+  line-height: 2.5ex;
 }
 </style>
 
