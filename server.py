@@ -52,34 +52,22 @@ def workflow(req):
     request = req
     socketio.emit('update-stage','madgraph')
     import subprocess
-    import threading
-    from multiprocessing import Process
-    import rawpipe
-    p = Process(target=rawpipe.run)
-    p.start()
-    # p.join()
-    # p = subprocess.Popen(['./rawpipe.py'])
-    print "done"
+    p = subprocess.Popen(['/home/lheinric/heptools/madgraph-1.5.10/bin/mg5','-f','mg5.cmd'],
+                        stdout = subprocess.PIPE,
+                        stderr = subprocess.PIPE,bufsize=0)
+    printandwait(p,request)
+
+    print "done with madgraph"
     
-    # run(target_tasks=[reco])
-    # p = subprocess.Popen(['/Users/lukas/heptools/madgraph-1.5.10/bin/mg5','-f','mg5.cmd'],
-    #                     stdout = subprocess.PIPE,
-    #                     stderr = subprocess.PIPE,bufsize=0)
-    #
-    # printandwait(p,request)
-    # socketio.emit('update-stage','pythia')
-    # subprocess.call('''gunzip -c ./madgraphrun/Events/output/events.lhe.gz > ./madgraphrun/Events/output/events.lhe''',shell=True)
-    # p = subprocess.Popen('''PYTHIA8DATA=`pythia8-config --xmldoc` ./pythiarun/pythiarun pythiasteering.cmnd pythiarun/output.hepmc''',
-    #               shell=True,
-    #               stdout = subprocess.PIPE,
-    #               stderr = subprocess.PIPE)
-    # printandwait(p,request)
-    # socketio.emit('update-stage','rivet')
-    # p = subprocess.Popen('''PYTHIA8DATA=`pythia8-config --xmldoc` ./pythiarun/pythiarun pythiasteering.cmnd pythiarun/output.hepmc''',
-    #               shell=True,
-    #               stdout = subprocess.PIPE,
-    #               stderr = subprocess.PIPE)
-    # p.communicate()
+    socketio.emit('update-stage','pythia')
+    subprocess.call('''gunzip -c ./madgraphrun/Events/output/events.lhe.gz > ./madgraphrun/Events/output/events.lhe''',shell=True)
+    p = subprocess.Popen('''PYTHIA8DATA=`pythia8-config --xmldoc` $HOME/threebody/workflow/results/pythiarun/pythiarun $HOME/threebody/workflow/results/pythiasteering.cmnd pythiarun/output.hepmc''',
+                  shell=True,
+                  stdout = subprocess.PIPE,
+                  stderr = subprocess.PIPE)
+    printandwait(p,request)
+
+    print "done with pythia"
 
                         
 @socketio.on('runanalysis')
@@ -94,4 +82,4 @@ def handle_my_custom_event():
   return
   
 if __name__ == "__main__":
-    socketio.run(app)
+    socketio.run(app,host='0.0.0.0',port=8000)
