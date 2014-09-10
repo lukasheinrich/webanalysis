@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  {% block header %}
+  <style type="text/css" media="screen">
+  body{
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", 
+    Helvetica, Arial, "Lucida Grande", sans-serif;
+  }
+  #content{
+    width:800px;
+    margin:auto;
+  }
+  </style>
+  {% endblock %}
+</head>
+<body>
+  <div id="content">
+  {% block content %}
+  {% endblock %}    
+  </div>
+</body>
+</html>

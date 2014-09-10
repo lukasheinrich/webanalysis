@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block header %}
+    {{ super() }}
+<style type="text/css" media="screen">
+
+tr{
+  outline: thin solid black;
+  word-wrap: break-word  
+}
+
+table{
+  table-layout: fixed;
+  width:100%;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<h1>ami information needed to re-run chain</h1>
+<strong>model dataset: <pre>{{dataset}}</pre></strong>
+
+{% for info in data %}
+<h3>step {{info[0]}}</h3>
+
+<table class="infotable">
+  <tr>
+    <td>input: {{info[1]['in']}}</td>    <td>output: {{info[1]['out']}}</td> <td>tranform: {{info[1]['trf']}}</td> <td>ami tag: {{info[1]['tag']}}</td>
+  </tr>
+  <tr>
+    <td colspan=4>
+      <pre>
+        {{info[1]['cmd']}}
+      </pre>
+    </td>
+  </tr>
+</table>
+
+
+{% endfor%}
+
+{% endblock %}
