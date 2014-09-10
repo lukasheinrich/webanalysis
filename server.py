@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
 import IPython
-
+import gevent.subprocess as subprocess
 
 from flask import Flask,render_template,request,url_for,redirect
 app = Flask(__name__)
 app.debug = True
 from flask.ext.socketio import SocketIO,emit
 socketio = SocketIO(app)
+
+
 
 @app.route("/")
 def hello():
@@ -16,8 +18,14 @@ def hello():
 @app.route("/upload",methods=['POST'])
 def upload_cards():
   #rudimentary.. better: http://flask.pocoo.org/docs/0.10/patterns/fileuploads/#uploading-files
-  request.files['proccard'].save('uploads/proc_card.dat')
-  request.files['paramcard'].save('uploads/param_card.dat')
+  mode = request.form.get('mode',None)
+  if len(request.files) == 0:
+    import shutil
+    shutil.copy('demofiles/proc_card.dat','uploads/proc_card.dat',)
+    shutil.copy('demofiles/param_card.dat','uploads/param_card.dat',)
+  else:
+    request.files['proccard'].save('uploads/proc_card.dat')
+    request.files['paramcard'].save('uploads/param_card.dat')
   return redirect(url_for('runview'))
 
 @app.route("/run")
@@ -34,40 +42,20 @@ def killer():
     p.kill()
     print 'killed'
 
-def printandwait(p,req):
-  with app.test_request_context():
-    while p.poll() is None:
-      import time
-      import re
-      s = p.stdout.readline()
-      time.sleep(0.002)
-      strip_ansi =  re.sub(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?', '', s)
-      socketio.emit('respond',strip_ansi)
-    (stdout,_) = p.communicate()
-    socketio.emit('respond',stdout)      
-    return
 
 def workflow(req):
   with app.test_request_context():
     request = req
     socketio.emit('update-stage','madgraph')
-    import subprocess
-    p = subprocess.Popen(['/home/lheinric/heptools/madgraph-1.5.10/bin/mg5','-f','mg5.cmd'],
-                        stdout = subprocess.PIPE,
-                        stderr = subprocess.PIPE,bufsize=0)
-    printandwait(p,request)
-
-    print "done with madgraph"
     
-    socketio.emit('update-stage','pythia')
-    subprocess.call('''gunzip -c ./madgraphrun/Events/output/events.lhe.gz > ./madgraphrun/Events/output/events.lhe''',shell=True)
-    p = subprocess.Popen('''PYTHIA8DATA=`pythia8-config --xmldoc` $HOME/threebody/workflow/results/pythiarun/pythiarun $HOME/threebody/workflow/results/pythiasteering.cmnd pythiarun/output.hepmc''',
-                  shell=True,
-                  stdout = subprocess.PIPE,
-                  stderr = subprocess.PIPE)
-    printandwait(p,request)
-
-    print "done with pythia"
+    import cookbook
+    import backend
+    steps = ['madgraph','evgen']
+    
+    for step in steps:
+      socketio.emit('update-stage',step)
+      backend.printandwait(socketio,app,getattr(cookbook,step)(), req)
+      print "done with {}".format(step)
 
                         
 @socketio.on('runanalysis')
@@ -80,6 +68,19 @@ def handle_my_custom_event():
   wfthread.start()
   print "emit some stuff here"
   return
+  
+@app.route("/amitags",methods=['GET'])
+def amitags():
+    dataset = request.args.get('dataset')
+    import requests
+    from flask import json,jsonify
+    if dataset is not None:
+      response = requests.get('http://localhost:10003',params = {'dataset':dataset}).content
+      jsondata = json.loads(response)
+      ordered_data = list(sorted(jsondata.iteritems(),key=lambda x:x[0]))
+      return render_template('amiinfo.html',data = ordered_data, dataset = dataset)
+    else:
+      return 'no dataset provided'  
   
 if __name__ == "__main__":
     socketio.run(app,host='0.0.0.0',port=8000)

@@ -1,29 +1,21 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <style type="text/css" media="screen">
-    body{
-      font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", 
-        Helvetica, Arial, "Lucida Grande", sans-serif;
-    }
-    #content{
-      width:800px;
-      margin:auto;
-    }
+{% extends "base.html" %}
+{% block content %}
+{{ super() }}
+<h1>fullchain runner</h1>
+<p>This page allows you to upload madgraph cards. These cards will be used to simulate the matrix element and run the full ATLAS Monte carlo chain</p>
+<p>
+<form action="upload" method=post enctype=multipart/form-data>
+  Process Card
+  <input type="hidden" name="mode" value="true_upload">
+  <input type="file" name="proccard" id="proccard"> Parameter Card
+  <input type="file" name="paramcard" id="paramcard">
+  <input type="submit">
+</form>
+</p>
+Try out a default set of cards (three-body stop decays)
+<form action="upload" method=post enctype=multipart/form-data>
+  <input type="hidden" name="mode" value="demo">
+  <input type="submit">
+</form>
 
-    </style>
-  </head>
-  <body>
-    <div id="content">
-      <h1>fullchain runner</h1>
-    <p>This page allows you to upload madgraph cards. These cards will be used to simulate the matrix element and run the full ATLAS Monte carlo chain</p>
-
-    <form action="upload" method=post enctype=multipart/form-data>
-      Process Card
-      <input type="file" name="proccard" id="proccard"> Parameter Card
-      <input type="file" name="paramcard" id="paramcard">
-      <input type="submit">
-    </form>
-    </div>
-  </body>
-</html>
+{% endblock %}

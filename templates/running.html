@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
+{% block header %}
+{{ super() }}
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
 <script type="text/javascript" charset="utf-8">
@@ -42,14 +44,6 @@
 </script>
 
 <style type="text/css" media="screen">
-body{
-  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", 
-    Helvetica, Arial, "Lucida Grande", sans-serif;
-}
-h1{
-  width:800px;
-  margin:auto;
-}
 #logcontainer{
   width:1000px;
   margin:auto;
@@ -63,19 +57,14 @@ h1{
   line-height: 2.5ex;
 }
 </style>
+{% endblock %}
+{% block content %}
+<button id="starter">start</button>
 
-<html>
-  <head>
-  </head>
-  <body>
-      <button id="starter">start</button>
-
-      <h1>running the analysis.... this is the log:</h1>      
-      <div id="logcontainer">
-      <h2>stage: <span id="stage"></span></h2>
-      <pre class="logwindow" id="log">
-running the analysis.... this is the log:
-
+<h1>running the analysis.... this is the log:</h1>      
+<div id="logcontainer">
+  <h2>stage: <span id="stage"></span></h2>
+  <pre class="logwindow" id="log">
 ?1034hRunning MG5 in debug mode
 ************************************************************
 *                                                          *
@@ -265,5 +254,4 @@ run_card missed argument lhaid. Takes default: 10042
 write compile file for card: /Users/lukas/Code/scratch/runner/madgraphrun/Source/MODEL/MG5_param.dat
       </pre>
     </div>
-  </body>
-</html>
+{% endblock %}
